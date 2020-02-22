@@ -19,16 +19,18 @@ function App() {
 }
 
 function PrivateRoute({ component: Component, ...rest }) {
-  <Route
-    {...rest}
-    render={props =>
-      localStorage.getItem("token") ? (
-        <Component {...props} />
-      ) : (
-        <Redirect to="/" />
-      )
-    }
-  />;
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        localStorage.getItem("token") ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to="/" />
+        )
+      }
+    />
+  );
 }
 
 export default App;
