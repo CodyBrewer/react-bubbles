@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
 import Login from "./components/Login";
 import "./styles.scss";
@@ -16,6 +16,19 @@ function App() {
       </div>
     </Router>
   );
+}
+
+function PrivateRoute({ component: Component, ...rest }) {
+  <Route
+    {...rest}
+    render={props =>
+      localStorage.getItem("token") ? (
+        <Component {...props} />
+      ) : (
+        <Redirect to="/" />
+      )
+    }
+  />;
 }
 
 export default App;
