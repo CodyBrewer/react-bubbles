@@ -11,13 +11,12 @@ const Login = props => {
 
   const handleInputChange = evt => {
     evt.preventDefault();
-    console.log({ [evt.target.name]: evt.target.value });
     setCredentials({ ...credentials, [evt.target.name]: evt.target.value });
   };
 
   const handleFormSubmit = evt => {
     evt.preventDefault();
-    console.log(credentials);
+
     axios
       .post(`http://localhost:5000/api/login`, credentials)
       .then(res => {
