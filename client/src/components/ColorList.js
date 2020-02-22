@@ -10,6 +10,11 @@ const ColorList = ({ colors, updateColors }) => {
   console.log(colors);
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
+  const [adding, setAdding] = useState(false);
+  const [colorToAdd, setColorToAdd] = useState({
+    color: "",
+    code: { hex: "" }
+  });
 
   const editColor = color => {
     setEditing(true);
@@ -47,6 +52,19 @@ const ColorList = ({ colors, updateColors }) => {
       .catch(err => console.log(err.message));
   };
 
+  const addColor = e => {
+    e.preventDefault();
+    console.log(colorToAdd);
+    axiosWithAuth()
+      .post(`http://localhost:5000/api/colors/`, colorToAdd)
+      .then(res => {
+        const newColorsList = res.data;
+        updateColors(newColorsList);
+        setAdding(false);
+      })
+      .catch(err => err.message);
+  };
+
   return (
     <div className="colors-wrap">
       <p>colors</p>
@@ -74,8 +92,49 @@ const ColorList = ({ colors, updateColors }) => {
             ))
           : null}
       </ul>
+      <button
+        onClick={e => {
+          e.preventDefault();
+          setAdding(true);
+        }}
+      >
+        Add Color
+      </button>
+      {adding && (
+        <form onSubmit={addColor}>
+          <legend>add color</legend>
+          <label>
+            color name:
+            <input
+              onChange={e =>
+                setColorToAdd({ ...colorToAdd, color: e.target.value })
+              }
+              value={colorToAdd.color}
+            />
+          </label>
+          <label>
+            hex code:
+            <input
+              onChange={e =>
+                setColorToAdd({ ...colorToAdd, code: { hex: e.target.value } })
+              }
+              value={colorToAdd.code.hex}
+            />
+          </label>
+          <div className="button-row">
+            <button type="submit">add</button>
+            <button
+              onClick={() => {
+                setAdding(false);
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
       {editing && (
-        <form onSubmit={saveEdit}>
+        <form id="add-form" onSubmit={saveEdit}>
           <legend>edit color</legend>
           <label>
             color name:
